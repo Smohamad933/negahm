@@ -73,11 +73,27 @@ $quote        = $quote ?? '';
     </div>
   </div>
 
-  <div class="marquee-wrapper is-animating">
+  <?php
+    // اگر تعداد برندها کم باشد، یک دورِ تراک از عرض صفحه باریک‌تر می‌شود و
+    // وسط لوپ جای خالی می‌افتد؛ پس گروه را تا رسیدن به آستانه تکرار می‌کنیم.
+    $marqueeGroup = $marquee;
+    while (count($marqueeGroup) < 16) {
+        $marqueeGroup = array_merge($marqueeGroup, $marquee);
+    }
+  ?>
+  <div class="marquee-wrapper">
     <div class="marquee-track">
-      <?php foreach (array_merge($marquee, $marquee) as $brand): ?>
-      <span class="client-pill"><?= e((string) $brand['name']) ?></span>
-      <?php endforeach; ?>
+      <div class="marquee-group">
+        <?php foreach ($marqueeGroup as $brand): ?>
+        <span class="client-pill"><?= e((string) $brand['name']) ?></span>
+        <?php endforeach; ?>
+      </div>
+      <!-- کپی دوم فقط برای بی‌درز شدن لوپ است؛ از صفحه‌خوان پنهانش می‌کنیم -->
+      <div class="marquee-group" aria-hidden="true">
+        <?php foreach ($marqueeGroup as $brand): ?>
+        <span class="client-pill"><?= e((string) $brand['name']) ?></span>
+        <?php endforeach; ?>
+      </div>
     </div>
   </div>
 </section>

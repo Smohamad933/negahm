@@ -316,6 +316,47 @@ it('صفحه اصلی رندر می‌شود', function (): void {
     assertContains('09066673416', $response['body'], 'شماره تماس در صفحه');
 });
 
+it('مارکی برندها دو گروه یکسان دارد و کپی دوم از صفحه‌خوان پنهان است', function (): void {
+    $body = request('GET', '/')['body'];
+
+    // ریاضی لوپِ translateX(-50%) فقط وقتی بی‌درز است که تراک از دقیقاً دو
+    // گروهِ هم‌عرض ساخته شده باشد.
+    assertSame(2, substr_count($body, 'class="marquee-group"'), 'دو گروه در تراک');
+    assertContains('marquee-group" aria-hidden="true"', $body, 'کپی دوم aria-hidden دارد');
+
+    // قرص‌ها باید margin داشته باشند نه gap، وگرنه نقطه‌ی ۵۰٪ روی مرز
+    // کپی دوم نمی‌افتد و لوپ پرش می‌کند.
+    assertContains('.marquee-track {', file_get_contents(__DIR__ . '/../public/assets/css/site.css'), 'قاعدهٔ تراک');
+    $css = file_get_contents(__DIR__ . '/../public/assets/css/site.css');
+    assertContains('direction: ltr;', $css, 'تراک LTR است تا لوپ ۵۰٪ درست کار کند');
+});
+
+it('هدر فقط در صفحه‌هایی با بالای روشن، حالت is-light می‌گیرد', function (): void {
+    // هدر fixed و متنش سفید است؛ صفحه‌هایی که بالای تیره ندارند (جزئیات
+    // نمونه‌کار و نوشته) باید هدر روشن بگیرند وگرنه منو خوانده نمی‌شود.
+    assertTrue(!str_contains(request('GET', '/')['body'], 'site-header is-light'), 'خانه هیرو تیره دارد');
+    assertTrue(!str_contains(request('GET', '/about')['body'], 'site-header is-light'), 'درباره ما page-hero تیره دارد');
+    assertTrue(!str_contains(request('GET', '/works')['body'], 'site-header is-light'), 'فهرست نمونه‌کارها page-hero دارد');
+
+    $row  = DB::first(sprintf('SELECT slug FROM %s WHERE is_published = 1 LIMIT 1', DB::quoteIdent('works')));
+    assertSame(true, $row !== null, 'یک نمونه‌کار منتشرشده وجود دارد');
+    assertContains('site-header is-light', request('GET', '/works/' . $row['slug'])['body'], 'جزئیات نمونه‌کار هدر روشن می‌گیرد');
+
+    $post = DB::first(sprintf('SELECT slug FROM %s WHERE is_published = 1 LIMIT 1', DB::quoteIdent('posts')));
+    assertSame(true, $post !== null, 'یک نوشتهٔ منتشرشده وجود دارد');
+    assertContains('site-header is-light', request('GET', '/blog/' . $post['slug'])['body'], 'جزئیات نوشته هدر روشن می‌گیرد');
+});
+
+it('محتوای reveal بدون JavaScript پنهان نمی‌ماند', function (): void {
+    $css = file_get_contents(__DIR__ . '/../public/assets/css/site.css');
+    // حالت پنهان باید به کلاس «js» روی <html> وابسته باشد.
+    assertContains('.js .reveal {', $css, 'پنهان‌سازی reveal مشروط به js است');
+    assertTrue(!str_contains($css, "\n.reveal { opacity: 0"), 'قاعدهٔ بی‌قید .reveal باقی نمانده');
+
+    $body = request('GET', '/')['body'];
+    assertContains("documentElement.className += ' js'", $body, 'کلاس js پیش از paint تزریق می‌شود');
+});
+
 it('صفحه برندها و صفحه اختصاصی یک برند', function (): void {
     $list = request('GET', '/brands');
     assertSame(200, $list['status'], 'فهرست برندها — ' . $list['body']);

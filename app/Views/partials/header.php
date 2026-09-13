@@ -9,8 +9,18 @@ $menuMobile   = $menuMobile ?? [];
 $logo         = (string) setting('site_logo', '');
 $headerCta    = (string) setting('header_cta_text', 'شروع یک پروژه');
 $headerCtaUrl = (string) setting('header_cta_url', '/contact');
+
+/*
+ * هدر fixed و متنش سفید است. بیشتر صفحه‌ها بالای تیره دارند (هیرو در خانه و
+ * صفحهٔ خدمت، و page-hero در بقیه)، ولی جزئیات نمونه‌کار و جزئیات نوشته
+ * مستقیم روی پس‌زمینهٔ روشن body شروع می‌شوند؛ آنجا منوی سفید خوانده نمی‌شد.
+ * پس فقط همان دو صفحه هدر روشن می‌گیرند.
+ */
+$isDetail  = (is_current('/works') && !is_current('/works', true))
+          || (is_current('/blog') && !is_current('/blog', true));
+$headerCls = 'site-header' . ($isDetail ? ' is-light' : '');
 ?>
-<header class="site-header" data-header>
+<header class="<?= e($headerCls) ?>" data-header>
   <div class="container nav-wrap">
 
     <a class="brand" href="<?= e(url('/')) ?>" aria-label="<?= e($siteName) ?>">
@@ -42,7 +52,7 @@ $headerCtaUrl = (string) setting('header_cta_url', '/contact');
     <nav class="mobile-nav" aria-label="منوی موبایل">
       <?= menu_links($menuMobile, 'mobile') ?>
       <a class="mobile-call" href="tel:<?= e(preg_replace('/\D/', '', (string) ($sitePhone ?? ''))) ?>">تماس: <?= e($sitePhone ?? '') ?></a>
-      <a class="mobile-call" style="background:transparent;border:1px solid rgba(255,255,255,.25)" href="<?= e(url('/search')) ?>">جست‌وجو در سایت</a>
+      <a class="mobile-call mobile-call-ghost" href="<?= e(url('/search')) ?>">جست‌وجو در سایت</a>
     </nav>
 
   </div>
