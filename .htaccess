@@ -1,24 +1,65 @@
 # =====================================================================
-#  نگاه مدیا — هدایت ریشه به پوشه public
-#  اگر در هاست خود می‌توانید Document Root را روی /public تنظیم کنید،
-#  این فایل لازم نیست.
+#  نگاه مدیا — تنظیمات Apache برای ریشهٔ پروژه
+#
+#  حالت الف (توصیه‌شده): Document Root را روی پوشهٔ public بگذارید؛
+#    در آن صورت این فایل اصلاً در محدودهٔ وب نیست.
+#  حالت ب (هاست اشتراکی): کل پروژه را در public_html بریزید؛ این فایل
+#    به‌همراه index.php ریشه، سایت را راه می‌اندازد.
 # =====================================================================
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteRule ^$ public/ [L]
-    RewriteRule (.*) public/$1 [L]
+
+    # اگر سایت در زیرپوشه است، مسیر را اینجا بگذارید (مثال: RewriteBase /negahm/)
+    # RewriteBase /
+
+    # همهٔ درخواست‌ها به پوشهٔ public فرستاده می‌شوند تا نقطهٔ ورود واحد
+    # همان public/index.php بماند و آدرس‌های ریشه-نسبیِ /assets/... کار کنند.
+    #
+    # نگهبان روی $1 لازم است: بدون آن، بازنویسیِ دوبارهٔ مسیرِ از قبل
+    # public/… شده به public/public/… می‌انجامید و حلقه می‌ساخت. چون $1
+    # نسبت به خود پوشه است، در نصب زیرپوشه هم درست کار می‌کند.
+    RewriteCond $1 !^public/
+    RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
 
+# فهرست‌گیری پوشه‌ها همیشه خاموش
 <IfModule mod_autoindex.c>
     Options -Indexes
 </IfModule>
 
-# محافظت از فایل‌های حساس
+# همهٔ فایل‌های نقطه‌دار (.env، .gitignore، .htaccess و …) سرو نشوند
 <FilesMatch "^\.">
-    Require all denied
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
 </FilesMatch>
 
+# فایل‌های حساس: اسکیمای پایگاه داده، لاگ‌ها، مستندات و lockfileها
 <FilesMatch "\.(env|sql|log|md|json|lock)$">
-    Require all denied
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
 </FilesMatch>
+
+# دفاع لایهٔ دوم: اگر بازنویسی به هر دلیلی کار نکرد، این پوشه‌ها از وب
+# خوانده نشوند. (حالت الف که کلاً خارج از وب‌روت هستند.)
+<IfModule mod_authz_core.c>
+    <DirectoryMatch "^.*(app|config|database|routes|storage|tests|install|tools)(/|$)">
+        Require all denied
+    </DirectoryMatch>
+</IfModule>
+<IfModule !mod_authz_core.c>
+    <DirectoryMatch "^.*(app|config|database|routes|storage|tests|install|tools)(/|$)">
+        Order allow,deny
+        Deny from all
+    </DirectoryMatch>
+</IfModule>

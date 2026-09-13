@@ -25,6 +25,12 @@ import { fileURLToPath } from 'node:url';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(HERE, '..');
 const REMOTE = '/app';
+
+// NEGAHM_ENTRY=root نقطهٔ ورود را روی index.php ریشه می‌گذارد تا حالت نصب
+// «ریختن کل پروژه در public_html» هم قابل آزمایش باشد.
+const ROOT_ENTRY = process.env.NEGAHM_ENTRY === 'root';
+const ENTRY_SCRIPT = ROOT_ENTRY ? '/index.php' : '/public/index.php';
+const ENTRY_DOCROOT = ROOT_ENTRY ? REMOTE : `${REMOTE}/public`;
 const HOST = '0.0.0.0';
 const PORT = Number(process.env.PORT || 8080);
 
@@ -229,8 +235,8 @@ function buildPayload(php, req, body) {
     REQUEST_URI: req.url,
     QUERY_STRING: url.search ? url.search.slice(1) : '',
     SCRIPT_NAME: '/index.php',
-    SCRIPT_FILENAME: `${REMOTE}/public/index.php`,
-    DOCUMENT_ROOT: `${REMOTE}/public`,
+    SCRIPT_FILENAME: `${REMOTE}${ENTRY_SCRIPT}`,
+    DOCUMENT_ROOT: ENTRY_DOCROOT,
     SERVER_NAME: host.split(':')[0],
     SERVER_PORT: String(url.port || 80),
     SERVER_PROTOCOL: 'HTTP/1.1',
