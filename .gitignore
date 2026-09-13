@@ -1,0 +1,31 @@
+# وابستگی‌ها و فایل‌های محلی
+/vendor/
+/node_modules/
+.env
+.env.local
+.env.*.local
+
+# فایل‌های بارگذاری‌شده کاربران
+/public/uploads/*
+!/public/uploads/.gitkeep
+!/public/uploads/.htaccess
+
+# لاگ‌ها و کش
+/storage/logs/*
+!/storage/logs/.gitkeep
+/storage/cache/*
+!/storage/cache/.gitkeep
+
+# دیتابیس محلی
+*.sqlite
+*.sqlite3
+database/local.sql
+
+# ابزارها
+/.idea/
+/.vscode/
+.DS_Store
+Thumbs.db
+composer.phar
+/tests/tmp/
+/tools/node_modules/
