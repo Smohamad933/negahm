@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@php-wasm/node": "3.1.53",
-    "@php-wasm/universal": "3.1.53",
-    "puppeteer": "^25.10.0"
+    "@php-wasm/universal": "3.1.53"
   }
 }
