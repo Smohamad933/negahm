@@ -147,13 +147,15 @@ final class MenuController extends AdminController
     }
 
     /** ذخیره‌ی ترتیب جدید آیتم‌ها (کشیدن و رها کردن در پنل) */
-    public function reorder(Request $request): Response
+    public function move(Request $request, int $id, string $direction): Response
     {
-        $ids = (array) $request->input('order', []);
-        if ($ids !== []) {
-            MenuItem::reorder($ids);
-            Session::flash('success', 'ترتیب منو ذخیره شد.');
-        }
+        $moved = MenuItem::move($id, $direction === 'up' ? 'up' : 'down');
+        // کلید «danger» و نه «error»: flash_render() فقط
+        // success/danger/warning/info را رندر می‌کند.
+        Session::flash(
+            $moved ? 'success' : 'danger',
+            $moved ? 'ترتیب منو به‌روز شد.' : 'این آیتم در ابتدا یا انتهای فهرست است.'
+        );
 
         return Response::redirect(url('/admin/menu'));
     }

@@ -174,6 +174,7 @@ function makeTempImage(string $name): array
 }
 
 /* ================================================================ تست‌ها */
+use App\Core\DB;
 use App\Core\Jalali;
 use App\Core\Str;
 use App\Core\Validator;
@@ -792,6 +793,34 @@ it('آیتم وصل‌شده به یک رکورد، عنوان و آدرسش ر�
 
     // رکورد حذف‌شده نباید خطا بدهد؛ به آدرس ذخیره‌شده برمی‌گردیم
     assertSame('/fallback', MenuItem::resolveUrl(['type' => 'page', 'reference_id' => 999999, 'url' => '/fallback']), 'رکورد حذف‌شده به آدرس ذخیره‌شده برمی‌گردد');
+});
+
+it('جابه‌جایی آیتم منو با همسایه، ترتیب را عوض می‌کند', function (): void {
+    loginAs('Mohusyn', 'Smosh1387');
+
+    DB::delete('menu_items', 'position = ?', ['header']);
+
+    $a = MenuItem::create(['title' => 'الف', 'type' => 'custom', 'url' => '/a', 'position' => 'header',
+        'parent_id' => 0, 'sort_order' => 5, 'show_desktop' => 1, 'show_mobile' => 1,
+        'opens_new' => 0, 'is_active' => 1, 'created_at' => MenuItem::now()]);
+    $b = MenuItem::create(['title' => 'ب', 'type' => 'custom', 'url' => '/b', 'position' => 'header',
+        'parent_id' => 0, 'sort_order' => 5, 'show_desktop' => 1, 'show_mobile' => 1,
+        'opens_new' => 0, 'is_active' => 1, 'created_at' => MenuItem::now()]);
+
+    // sort_order هر دو ۵ است؛ renumber باید پیش از جابه‌جایی یکتایشان کند
+    assertSame(true, MenuItem::move((int) $b, 'up'), 'جابه‌جایی به بالا موفق بود');
+
+    $tree = MenuItem::tree('header');
+    assertSame('ب', $tree[0]['label'], 'آیتم «ب» بعد از جابه‌جایی اول است');
+    assertSame('الف', $tree[1]['label'], 'آیتم «الف» دوم شد');
+
+    assertSame(true, MenuItem::move((int) $b, 'down'), 'جابه‌جایی به پایین موفق بود');
+    $tree = MenuItem::tree('header');
+    assertSame('الف', $tree[0]['label'], 'با جابه‌جایی برگشتی، «الف» دوباره اول است');
+
+    // آیتم اول، همسایهٔ بالایی ندارد
+    assertSame(false, MenuItem::move((int) $a, 'up'), 'اولین آیتم به بالا جابه‌جا نمی‌شود');
+    assertSame(false, MenuItem::move(999999, 'up'), 'شناسهٔ نامعتبر false می‌دهد');
 });
 
 it('فونت فعال، @font-face برای کل سایت تولید می‌کند', function (): void {

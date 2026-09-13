@@ -126,9 +126,17 @@ $optionKeys = [
                     </form>
                   </details>
 
-                  <form action="<?= e(url('/admin/menu/' . $item['id'] . '/delete')) ?>" method="post" data-confirm="حذف این آیتم منو؟">
-                    <?= csrf_field() ?><button class="btn btn-xs btn-danger" type="submit">حذف</button>
-                  </form>
+                  <div class="cell-actions">
+                    <form action="<?= e(url('/admin/menu/' . $item['id'] . '/move/up')) ?>" method="post">
+                      <?= csrf_field() ?><button class="btn btn-xs" type="submit" title="یک پله بالا">▲</button>
+                    </form>
+                    <form action="<?= e(url('/admin/menu/' . $item['id'] . '/move/down')) ?>" method="post">
+                      <?= csrf_field() ?><button class="btn btn-xs" type="submit" title="یک پله پایین">▼</button>
+                    </form>
+                    <form action="<?= e(url('/admin/menu/' . $item['id'] . '/delete')) ?>" method="post" data-confirm="حذف این آیتم منو؟">
+                      <?= csrf_field() ?><button class="btn btn-xs btn-danger" type="submit">حذف</button>
+                    </form>
+                  </div>
                 </td>
               </tr>
               <?php endforeach; ?>

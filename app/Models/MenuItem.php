@@ -233,20 +233,63 @@ final class MenuItem extends Model
         ), [$position]);
     }
 
-    /** ترتیب جدید بر اساس فهرست شناسه‌ها */
-    public static function reorder(array $ids): void
+    /**
+     * شماره‌گذاری پیوستهٔ ۱..n برای یک موقعیت، بر پایهٔ ترتیب فعلی.
+     * sort_order مساوی بین آیتم‌ها ممکن است (مثلاً از seed) و جابه‌جایی را
+     * بی‌اثر می‌کند؛ پس پیش از هر جابه‌جایی ترتیب را یکتا می‌کنیم.
+     */
+    public static function renumber(string $position): void
     {
+        $rows = DB::select(sprintf(
+            'SELECT id FROM %s WHERE position = ? ORDER BY sort_order ASC, id ASC',
+            DB::quoteIdent('menu_items')
+        ), [$position]);
+
         $order = 1;
-        foreach ($ids as $id) {
-            $id = (int) $id;
-            if ($id <= 0) {
-                continue;
-            }
+        foreach ($rows as $row) {
             DB::update('menu_items', [
                 'sort_order' => $order++,
                 'updated_at' => self::now(),
-            ], 'id = ?', [$id]);
+            ], 'id = ?', [(int) $row['id']]);
         }
+    }
+
+    /**
+     * جابه‌جایی یک آیتم با همسایهٔ بالایی یا پایینی در همان موقعیت.
+     * @return bool false یعنی همسایه‌ای نبود (آیتم اول/آخر است)
+     */
+    public static function move(int $id, string $direction): bool
+    {
+        $item = self::find($id);
+        if ($item === null) {
+            return false;
+        }
+
+        $position = (string) $item['position'];
+        $up       = $direction === 'up';
+        self::renumber($position);
+
+        // بعد از شماره‌گذاری، ترتیب آیتم ممکن است عوض شده باشد
+        $item = self::find($id);
+        $sort = (int) $item['sort_order'];
+
+        $neighbor = DB::first(sprintf(
+            'SELECT * FROM %s WHERE position = ? AND sort_order %s ? ORDER BY sort_order %s, id %s LIMIT 1',
+            DB::quoteIdent('menu_items'),
+            $up ? '<' : '>',
+            $up ? 'DESC' : 'ASC',
+            $up ? 'DESC' : 'ASC'
+        ), [$position, $sort]);
+
+        if ($neighbor === null) {
+            return false;
+        }
+
+        $stamp = self::now();
+        DB::update('menu_items', ['sort_order' => (int) $neighbor['sort_order'], 'updated_at' => $stamp], 'id = ?', [$id]);
+        DB::update('menu_items', ['sort_order' => $sort, 'updated_at' => $stamp], 'id = ?', [(int) $neighbor['id']]);
+
+        return true;
     }
 
     /** @return array<string,mixed> */

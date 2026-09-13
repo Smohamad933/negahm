@@ -155,7 +155,7 @@ $router->group('/admin', ['auth'], static function (Router $r): void {
     /* منوها */
     $r->get('/menu', [Admin\MenuController::class, 'index'], ['admin'], 'admin.menu.index');
     $r->post('/menu', [Admin\MenuController::class, 'store'], ['csrf', 'admin'], 'admin.menu.store');
-    $r->post('/menu/reorder', [Admin\MenuController::class, 'reorder'], ['csrf', 'admin'], 'admin.menu.reorder');
+    $r->post('/menu/{id:\d+}/move/{direction}', [Admin\MenuController::class, 'move'], ['csrf', 'admin'], 'admin.menu.move');
     $r->post('/menu/{id:\d+}', [Admin\MenuController::class, 'update'], ['csrf', 'admin'], 'admin.menu.update');
     $r->post('/menu/{id:\d+}/toggle/{column}', [Admin\MenuController::class, 'toggle'], ['csrf', 'admin'], 'admin.menu.toggle');
     $r->post('/menu/{id:\d+}/delete', [Admin\MenuController::class, 'destroy'], ['csrf', 'admin'], 'admin.menu.delete');
