@@ -53,7 +53,7 @@ final class DB
                 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 PDO::ATTR_EMULATE_PREPARES   => false,
-                PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$charset}",
+                self::initCommandAttribute() => "SET NAMES {$charset}",
             ]);
         } catch (PDOException $e) {
             throw new RuntimeException('اتصال به پایگاه داده برقرار نشد: ' . $e->getMessage(), 0, $e);
@@ -61,6 +61,23 @@ final class DB
 
         self::$pdo = $pdo;
         return $pdo;
+    }
+
+    /**
+     * نام ثابت «دستور اولیهٔ اتصال» برای درایور MySQL.
+     *
+     * PHP 8.5 ثابت PDO::MYSQL_ATTR_INIT_COMMAND را منسوخ کرده و
+     * Pdo\Mysql::ATTR_INIT_COMMAND را جایگزینش کرده است (کلاس Pdo\Mysql از
+     * PHP 8.4 وجود دارد). ثابت فقط در شاخهٔ انتخاب‌شدهٔ شرط خوانده می‌شود،
+     * پس روی هیچ نسخه‌ای اخطار انسوخ صادر نمی‌شود.
+     *
+     * @return int|string
+     */
+    public static function initCommandAttribute(): int|string
+    {
+        return class_exists('Pdo\Mysql')
+            ? \Pdo\Mysql::ATTR_INIT_COMMAND
+            : \PDO::MYSQL_ATTR_INIT_COMMAND;
     }
 
     public static function driver(): string

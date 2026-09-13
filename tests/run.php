@@ -316,6 +316,31 @@ it('صفحه اصلی رندر می‌شود', function (): void {
     assertContains('09066673416', $response['body'], 'شماره تماس در صفحه');
 });
 
+it('ثابت دستور اولیهٔ MySQL بدون اخطار انسوخ حل می‌شود', function (): void {
+    // PHP 8.5 ثابت PDO::MYSQL_ATTR_INIT_COMMAND را منسوخ کرده است؛ DB باید
+    // روی هر نسخه‌ای ثابت درست را بدون اخطار برگرداند.
+    $deprecated = [];
+    set_error_handler(static function (int $severity, string $message) use (&$deprecated): bool {
+        if ($severity === E_DEPRECATED) {
+            $deprecated[] = $message;
+        }
+        return true;
+    }, E_DEPRECATED);
+
+    $attr = DB::initCommandAttribute();
+
+    restore_error_handler();
+
+    assertSame([], $deprecated, 'هیچ اخطار E_DEPRECATED صادر نشد');
+
+    // مقدار مورد انتظار را هم با همان منطق نسخه‌محور می‌سازیم تا این تست
+    // روی PHP 8.5 خودش ثابت منسوخ‌شده را نخواند.
+    $expected = class_exists('Pdo\\Mysql')
+        ? \Pdo\Mysql::ATTR_INIT_COMMAND
+        : PDO::MYSQL_ATTR_INIT_COMMAND;
+    assertSame($expected, $attr, 'ثابت درست برای این نسخهٔ PHP برگردانده شد');
+});
+
 it('مارکی برندها دو گروه یکسان دارد و کپی دوم از صفحه‌خوان پنهان است', function (): void {
     $body = request('GET', '/')['body'];
 
