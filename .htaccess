@@ -1,0 +1,24 @@
+# =====================================================================
+#  نگاه مدیا — هدایت ریشه به پوشه public
+#  اگر در هاست خود می‌توانید Document Root را روی /public تنظیم کنید،
+#  این فایل لازم نیست.
+# =====================================================================
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^$ public/ [L]
+    RewriteRule (.*) public/$1 [L]
+</IfModule>
+
+<IfModule mod_autoindex.c>
+    Options -Indexes
+</IfModule>
+
+# محافظت از فایل‌های حساس
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "\.(env|sql|log|md|json|lock)$">
+    Require all denied
+</FilesMatch>

@@ -1,0 +1,37 @@
+# =====================================================================
+#  نگاه مدیا — محافظت از پوشه فایل‌های بارگذاری‌شده
+#  اجرای اسکریپت در این پوشه غیرفعال است؛ فقط فایل‌های رسانه سرو می‌شوند.
+# =====================================================================
+
+# جلوگیری از اجرای PHP و سایر اسکریپت‌ها
+<FilesMatch "\.(php|phtml|php3|php4|php5|php7|php8|phar|pl|py|cgi|sh|asp|aspx|jsp)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+
+<IfModule mod_autoindex.c>
+    Options -Indexes -ExecCGI
+</IfModule>
+
+# نوع MIME بر اساس پسوند، نه محتوای ارسالی کاربر
+<IfModule mod_mime.c>
+    AddType image/jpeg .jpg .jpeg
+    AddType image/png  .png
+    AddType image/webp .webp
+    AddType image/gif  .gif
+    AddType image/svg+xml .svg
+    AddType application/pdf .pdf
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+</IfModule>

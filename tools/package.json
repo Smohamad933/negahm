@@ -1,0 +1,14 @@
+{
+  "name": "negahm-devtools",
+  "private": true,
+  "type": "module",
+  "description": "ابزارهای توسعه نگاه مدیا — بررسی نحوی و تست‌ها با PHP-WASM",
+  "scripts": {
+    "lint": "node lint.mjs",
+    "test": "node test.mjs"
+  },
+  "dependencies": {
+    "@php-wasm/node": "3.1.53",
+    "@php-wasm/universal": "3.1.53"
+  }
+}
