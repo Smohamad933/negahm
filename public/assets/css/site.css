@@ -245,8 +245,12 @@ h1, h2, h3, h4 { margin: 0; line-height: 1.15; font-weight: 800; letter-spacing:
   background: linear-gradient(transparent, #1a1a1a);
 }
 .hero-orb, .hero-glow { position: absolute; border-radius: 50%; filter: blur(60px); pointer-events: none; }
-.orb-one { width: 240px; height: 240px; background: #357abd; right: 10%; top: 20%; opacity: .15; }
-.orb-two { width: 160px; height: 160px; background: #4a90e2; left: 15%; bottom: 15%; opacity: .1; }
+/*
+ * این دو هاله آبی قدیمی (#357abd / #4a90e2) بودند و با رنگ تأکیدی تیل سایت
+ * نمی‌خواندند؛ به همان پالت تیل منتقل شدند.
+ */
+.orb-one { width: 240px; height: 240px; background: var(--blue); right: 10%; top: 20%; opacity: .18; }
+.orb-two { width: 160px; height: 160px; background: var(--blue-2); left: 15%; bottom: 15%; opacity: .12; }
 
 .hero-inner, .hero-grid {
   min-height: 100%; display: grid;
