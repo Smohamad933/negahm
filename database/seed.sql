@@ -27,7 +27,7 @@ INSERT INTO `settings` (`key`, `value`, `type`, `group`, `label`, `updated_at`) 
 ('social_linkedin', '', 'string', 'social', 'لینکدین', NOW()),
 ('social_twitter', '', 'string', 'social', 'توییتر / ایکس', NOW()),
 ('social_youtube', '', 'string', 'social', 'یوتیوب', NOW()),
-('social_whatsapp', 'https://wa.me/989066673416', 'string', 'social', 'واتس‌اپ', NOW()),
+('social_whatsapp', 'https://wa.me/989012319879', 'string', 'social', 'واتس‌اپ', NOW()),
 ('social_behance', '', 'string', 'social', 'بیهنس', NOW()),
 ('social_aparats', '', 'string', 'social', 'آپارات', NOW()),
 
@@ -78,12 +78,12 @@ INSERT INTO `settings` (`key`, `value`, `type`, `group`, `label`, `updated_at`) 
 ('about_story', 'ما بین استراتژی، طراحی و محتوا پل می‌زنیم تا هر خروجی بخشی از یک تصویر بزرگ‌تر باشد. هر پروژه برای ما یک فرصت است تا یک برند را قابل تشخیص‌تر، قابل فهم‌تر و قابل اعتمادتر کنیم.\n\nباور ما این است که تبلیغ خوب از شناخت مسئله شروع می‌شود، نه از انتخاب رنگ و فونت. به همین دلیل هر همکاری را با جلسه شناخت و تعریف هدف آغاز می‌کنیم و تا اندازه‌گیری نتیجه همراه برند می‌مانیم.', 'text', 'about', 'داستان ما', NOW()),
 ('about_values', '["شناخت پیش از اجرا","یک تیم، یک خروجی منسجم","شفافیت در فرآیند و هزینه","تعهد به نتیجه، نه فقط تحویل فایل"]', 'json', 'about', 'ارزش‌ها', NOW()),
 
-('contact_phone', '09066673416', 'string', 'contact', 'تلفن تماس', NOW()),
-('contact_email', 'info@negahmedia.ir', 'string', 'contact', 'ایمیل تماس', NOW()),
-('contact_whatsapp', '989066673416', 'string', 'contact', 'شماره واتس‌اپ', NOW()),
+('contact_phone', '09012319879', 'string', 'contact', 'تلفن تماس', NOW()),
+('contact_email', 'negahminfo@gmail.com', 'string', 'contact', 'ایمیل تماس', NOW()),
+('contact_whatsapp', '989012319879', 'string', 'contact', 'شماره واتس‌اپ', NOW()),
 ('contact_address', 'اهواز، خوزستان، ایران', 'text', 'contact', 'آدرس', NOW()),
 ('contact_hours', 'شنبه تا چهارشنبه، ۹ تا ۱۸', 'string', 'contact', 'ساعات کاری', NOW()),
-('notify_email', 'info@negahmedia.ir', 'string', 'contact', 'ایمیل دریافت پیام‌ها', NOW()),
+('notify_email', 'negahminfo@gmail.com', 'string', 'contact', 'ایمیل دریافت پیام‌ها', NOW()),
 
 ('seo_title', 'نگاه مدیا | آژانس خلاق و تبلیغاتی', 'string', 'seo', 'عنوان پیش‌فرض سئو', NOW()),
 ('seo_description', 'از ایده تا اجرا؛ هویت بصری، تولید محتوا، کمپین و دیجیتال مارکتینگ را یکپارچه می‌سازیم تا برند شما فقط دیده نشود، بلکه در ذهن بماند.', 'text', 'seo', 'توضیحات پیش‌فرض سئو', NOW()),

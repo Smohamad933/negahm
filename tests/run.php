@@ -297,8 +297,8 @@ it('شش سرویس و هشت نمونه‌کار', function (): void {
 
 it('تنظیمات سایت از پایگاه داده خوانده می‌شود', function (): void {
     assertSame('نگاه مدیا', Setting::get('site_name'), 'نام سایت');
-    assertSame('09066673416', Setting::get('contact_phone'), 'شماره تماس');
-    assertContains('info@negahmedia.ir', (string) Setting::get('contact_email'), 'ایمیل تماس');
+    assertSame('09012319879', Setting::get('contact_phone'), 'شماره تماس');
+    assertContains('negahminfo@gmail.com', (string) Setting::get('contact_email'), 'ایمیل تماس');
 });
 
 echo "\n\033[1m۵. صفحات عمومی سایت\033[0m\n";
@@ -313,7 +313,7 @@ it('صفحه اصلی رندر می‌شود', function (): void {
     assertContains('نمونه‌کارها', $response['body'], 'بخش نمونه‌کارها');
     assertContains('application/ld+json', $response['body'], 'داده ساختاریافته');
     assertContains('dir="rtl"', $response['body'], 'چینش راست‌به‌چپ');
-    assertContains('09066673416', $response['body'], 'شماره تماس در صفحه');
+    assertContains('09012319879', $response['body'], 'شماره تماس در صفحه');
 });
 
 it('ثابت دستور اولیهٔ MySQL بدون اخطار انسوخ حل می‌شود', function (): void {

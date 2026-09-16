@@ -85,13 +85,25 @@ $quote        = $quote ?? '';
     <div class="marquee-track">
       <div class="marquee-group">
         <?php foreach ($marqueeGroup as $brand): ?>
-        <span class="client-pill"><?= e((string) $brand['name']) ?></span>
+        <span class="client-pill<?= !empty($brand['logo']) ? ' client-pill-logo' : '' ?>">
+          <?php if (!empty($brand['logo'])): ?>
+          <img src="<?= e(upload_url((string) $brand['logo'])) ?>" alt="<?= e((string) $brand['name']) ?>" loading="lazy">
+          <?php else: ?>
+          <?= e((string) $brand['name']) ?>
+          <?php endif; ?>
+        </span>
         <?php endforeach; ?>
       </div>
       <!-- کپی دوم فقط برای بی‌درز شدن لوپ است؛ از صفحه‌خوان پنهانش می‌کنیم -->
       <div class="marquee-group" aria-hidden="true">
         <?php foreach ($marqueeGroup as $brand): ?>
-        <span class="client-pill"><?= e((string) $brand['name']) ?></span>
+        <span class="client-pill<?= !empty($brand['logo']) ? ' client-pill-logo' : '' ?>">
+          <?php if (!empty($brand['logo'])): ?>
+          <img src="<?= e(upload_url((string) $brand['logo'])) ?>" alt="" loading="lazy">
+          <?php else: ?>
+          <?= e((string) $brand['name']) ?>
+          <?php endif; ?>
+        </span>
         <?php endforeach; ?>
       </div>
     </div>

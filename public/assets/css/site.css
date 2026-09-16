@@ -377,6 +377,17 @@ h1, h2, h3, h4 { margin: 0; line-height: 1.15; font-weight: 800; letter-spacing:
 .client-pill:hover, .marquee-item:hover {
   color: #fff; border-color: rgba(27, 179, 145, .6); background: rgba(27, 179, 145, .08);
 }
+/* پیل‌هایی که لوگو دارند: لوگو در حالت عادی کم‌رنگ و بی‌رنگ، با هاور کامل */
+.client-pill-logo { padding: 0 22px; }
+.client-pill-logo img {
+  max-height: 34px; max-width: 130px; width: auto; height: auto;
+  object-fit: contain; display: block;
+  filter: grayscale(1) brightness(1.7); opacity: .6;
+  transition: filter .3s ease, opacity .3s ease;
+}
+.client-pill-logo:hover img { filter: none; opacity: 1; }
+@media (max-width: 760px) { .client-pill-logo img { max-height: 28px; max-width: 105px; } }
+@media (max-width: 500px) { .client-pill-logo img { max-height: 24px; max-width: 90px; } }
 
 /* ============================================================= SECTIONS */
 
